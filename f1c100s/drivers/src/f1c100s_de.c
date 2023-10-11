@@ -381,7 +381,7 @@ static void tcon0_init(de_lcd_config_t* params) {
         write32(TCON_BASE + TCON0_CPU_INTF, (params->bus_8080_type << 29) | (1 << 26));
     } else {
         clear32(TCON_BASE + TCON0_CTRL, (1 << 24));
-        set32(TCON_BASE + TCON0_CTRL, (1 << 23));
+        // set32(TCON_BASE + TCON0_CTRL, (1 << 23)); // 565 模式下 R B 没有反，不需要交换
 
         if(params->bus_mode == DE_LCD_SERIAL_RGB) { // TODO: RGB order
             write32(TCON_BASE + TCON0_HV_INTF, (1UL << 31));
