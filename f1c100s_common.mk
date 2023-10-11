@@ -5,7 +5,7 @@
 BUILDDIR = build
 	
 # toolchain
-TOOLCHAIN    = arm-none-eabi-
+TOOLCHAIN    = /Applications/ArmGNUToolchain/12.3.rel1/arm-none-eabi/bin/arm-none-eabi-
 CC           = $(TOOLCHAIN)gcc
 CP           = $(TOOLCHAIN)objcopy
 SZ           = $(TOOLCHAIN)size

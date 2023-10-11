@@ -106,37 +106,23 @@ static void display_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_col
     lv_disp_flush_ready(disp_drv);
 }
 
-    // config.h_front_porch = 160;
-    // config.h_back_porch = 160;
-    // config.h_sync_len = 1;
-    // config.v_front_porch = 2;
-    // config.v_back_porch = 8;
-    // config.v_sync_len = 12;
-
 void display_init(void) {
     de_lcd_config_t config;
 
-    config.width = 600;
-    config.height = 1280;
-    config.bus_width = DE_LCD_R_6BITS | DE_LCD_G_6BITS | DE_LCD_B_6BITS;
+    config.width = LCD_H_RES;
+    config.height = LCD_V_RES;
+    config.bus_width = DE_LCD_R_5BITS | DE_LCD_G_6BITS | DE_LCD_B_5BITS;
     config.bus_mode = DE_LCD_PARALLEL_RGB;
 
-    config.pixel_clock_hz = 49500000;
-    config.h_front_porch = 160;
-    config.h_back_porch = 160;
-    config.h_sync_len = 1;
-    config.v_front_porch = 2;
-    config.v_back_porch = 8;
-    config.v_sync_len = 12;
-
-    // config.h_front_porch = 46;
-    // config.h_back_porch = 44;
-    // config.h_sync_len = 2;
-    // config.v_front_porch = 16;
-    // config.v_back_porch = 6;
-    // config.v_sync_len = 2;
-    config.h_sync_invert = 0;
-    config.v_sync_invert = 0;
+    config.pixel_clock_hz = 33000000;
+    config.h_front_porch = 46;
+    config.h_back_porch = 44;
+    config.h_sync_len = 2;
+    config.v_front_porch = 13;
+    config.v_back_porch = 6;
+    config.v_sync_len = 2;
+    config.h_sync_invert = 1;
+    config.v_sync_invert = 1;
 
     display_gpio_init();
     de_lcd_init(&config);

@@ -3,6 +3,7 @@
 #include "f1c100s_clock.h"
 #include "f1c100s_tve.h"
 #include "io.h"
+#include "stdio.h"
 
 static void debe_update_linewidth(uint8_t layer);
 static void tcon0_init(de_lcd_config_t* params);
@@ -116,6 +117,7 @@ void debe_layer_set_mode(uint8_t layer, debe_color_mode_e mode) {
 void debe_layer_set_addr(uint8_t layer, void* buf) {
     if(layer > 3) return;
     write32(DEBE_BASE + DEBE_LAY_ADDR + layer * 4, ((uint32_t)buf) << 3);
+    write32(DEBE_BASE + DEBE_LAY_L4ADDR + layer * 4, ((uint32_t)buf) >> 29);
 }
 
 void debe_layer_set_alpha(uint8_t layer, uint8_t alpha) {
@@ -358,6 +360,7 @@ static void tcon0_init(de_lcd_config_t* params) {
     val = (params->v_front_porch + params->v_back_porch + params->v_sync_len);
     write32(TCON_BASE + TCON0_CTRL, ((val & 0x1f) << 4));
     val = tcon_clk / params->pixel_clock_hz;
+    printf("tcon_clk %ld  val %ld \n", tcon_clk, val);
     write32(TCON_BASE + TCON0_DCLK, (0xf << 28) | (val << 0));
     write32(TCON_BASE + TCON0_TIMING_ACT, ((de.width - 1) << 16) | ((de.height - 1) << 0));
 
@@ -378,6 +381,8 @@ static void tcon0_init(de_lcd_config_t* params) {
         write32(TCON_BASE + TCON0_CPU_INTF, (params->bus_8080_type << 29) | (1 << 26));
     } else {
         clear32(TCON_BASE + TCON0_CTRL, (1 << 24));
+        set32(TCON_BASE + TCON0_CTRL, (1 << 23));
+
         if(params->bus_mode == DE_LCD_SERIAL_RGB) { // TODO: RGB order
             write32(TCON_BASE + TCON0_HV_INTF, (1UL << 31));
         } else if(params->bus_mode == DE_LCD_SERIAL_YUV) { // TODO: YUV order

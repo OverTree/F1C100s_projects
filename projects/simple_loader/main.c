@@ -14,6 +14,7 @@ void reset_cpu(void);
 
 #define FW_START_ADDR 0x10000
 #define FW_MAGIC 0x555AAAFF
+#define FW_MAGIC2 0xAA55AA55
 uint8_t* dram = (uint8_t*)0x80000000;
 
 typedef struct {
@@ -41,7 +42,7 @@ int main(void) {
 
     spi_flash_read(FW_START_ADDR, dram, sizeof(fw_header_t));
     fw_header_t* hdr = (fw_header_t*)dram;
-    if((hdr->magic == FW_MAGIC) && (hdr->end > hdr->start)) {
+    if((hdr->magic == FW_MAGIC || hdr->magic == FW_MAGIC2) && (hdr->end > hdr->start)) {
         uint32_t len = hdr->end - hdr->start;
         printf("FW header found! len: %lu\r\n", len);
         spi_flash_read(FW_START_ADDR, dram, len);

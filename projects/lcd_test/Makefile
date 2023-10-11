@@ -21,7 +21,7 @@ OPT = -Og
 
 DEFS += -DLOAD_HEADER # add header for simple_loader
 
-DEFS += -DDISPLAY_W=800 -DDISPLAY_H=480
+DEFS += -DDISPLAY_W=600 -DDISPLAY_H=1280
 
 # DRAM size: 32M for F1C100s, 64M for F1C200s
 DRAM_SIZE = 32M

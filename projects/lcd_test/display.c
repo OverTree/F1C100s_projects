@@ -8,23 +8,31 @@
 
 static void display_gpio_init(void);
 
+// config.pixel_clock_hz = 495 * 100 * 1000;
+// config.h_front_porch = 46;
+// config.h_back_porch = 44;
+// config.h_sync_len = 2;
+// config.v_front_porch = 13;
+// config.v_back_porch = 6;
+// config.v_sync_len = 2;
+
 void display_init(void) {
     de_lcd_config_t config;
 
-    config.width = 800;
-    config.height = 480;
-    config.bus_width = DE_LCD_R_6BITS | DE_LCD_G_6BITS | DE_LCD_B_6BITS;
+    config.width = 600;
+    config.height = 1280;
+    config.bus_width = DE_LCD_R_5BITS | DE_LCD_G_6BITS | DE_LCD_B_5BITS;
     config.bus_mode = DE_LCD_PARALLEL_RGB;
 
-    config.pixel_clock_hz = 33000000;
-    config.h_front_porch = 40;
-    config.h_back_porch = 87;
+    config.pixel_clock_hz = 49500000;
+    config.h_front_porch = 160;
+    config.h_back_porch = 160;
     config.h_sync_len = 1;
-    config.v_front_porch = 13;
-    config.v_back_porch = 31;
-    config.v_sync_len = 3;
-    config.h_sync_invert = 1;
-    config.v_sync_invert = 1;
+    config.v_front_porch = 2;
+    config.v_back_porch = 8;
+    config.v_sync_len = 12;
+    config.h_sync_invert = 0;
+    config.v_sync_invert = 0;
 
     display_gpio_init();
     de_lcd_init(&config);
@@ -34,8 +42,7 @@ void display_init(void) {
     pwm_set_period(PWM1, 100); // 100k / 100 = 1kHz
     pwm_set_pulse_len(PWM1, 0);
     pwm_enable(PWM1);
-
-    debe_set_bg_color(0x0000FF00);
+    // debe_set_bg_color(0xFFFFFF00);
     debe_load(DEBE_UPDATE_AUTO);
 }
 

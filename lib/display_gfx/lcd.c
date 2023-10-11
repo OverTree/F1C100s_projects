@@ -6,6 +6,19 @@
 
 #define SAVE_X_OFFSET
 
+// 定义RGB565颜色转换函数
+uint16_t RGB888toRGB565(uint32_t rgb888) {
+    // 从RGB888提取红、绿和蓝分量
+    uint8_t r = (rgb888 >> 16) & 0xFF;
+    uint8_t g = (rgb888 >> 8) & 0xFF;
+    uint8_t b = rgb888 & 0xFF;
+
+    // 将RGB888颜色值转换为RGB565
+    uint16_t rgb565 = ((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3);
+
+    return rgb565;
+}
+
 static uint32_t bg_color   = COLOR_BLACK;
 static uint32_t text_color = COLOR_WHITE;
 
@@ -15,7 +28,7 @@ static uint16_t text_x_start = 0;
 
 static lcd_font_t* font;
 
-#define LCD_BPP 32
+#define LCD_BPP 16
 
 #if LCD_BPP == 32
 static uint32_t lcd_fb[DISPLAY_W * DISPLAY_H];
@@ -45,11 +58,12 @@ void lcd_init(uint8_t layer) {
     lcd_set_font(&t_12x24_full);
 }
 
+// 0x0000FF00
 inline void lcd_set_pixel(uint16_t x, uint16_t y, uint32_t color) {
 #if LCD_BPP == 32
     lcd_fb[x + y * DISPLAY_W] = color;
 #elif LCD_BPP == 16
-    lcd_fb[x + y * DISPLAY_W] = color & 0xFFFF;
+    lcd_fb[x + y * DISPLAY_W] = RGB888toRGB565(color);// & 0xFFFF;
 #elif LCD_BPP == 8
     lcd_fb[x + y * DISPLAY_W] = color & 0xFF;
 #else
@@ -63,7 +77,11 @@ void lcd_fill(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint32_t color) {
     for(uint16_t ypos = y; ypos < (y + h); ypos++) {
         offset = (uint32_t)ypos * DISPLAY_W;
         for(uint16_t xpos = x; xpos < (x + w); xpos++) {
-            lcd_fb[offset + xpos] = color;
+            #if LCD_BPP == 16
+                lcd_fb[offset + xpos] = RGB888toRGB565(color);
+            #else
+                lcd_fb[offset + xpos] = color;
+            #endif
         }
     }
 }

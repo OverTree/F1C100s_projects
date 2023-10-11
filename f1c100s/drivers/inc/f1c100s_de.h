@@ -51,6 +51,7 @@ typedef enum {
     DEBE_LAY_POS     = 0x0820,
     DEBE_LAY_STRIDE  = 0x0840,
     DEBE_LAY_ADDR    = 0x0850,
+    DEBE_LAY_L4ADDR  = 0x0860,
     DEBE_REGBUF_CTRL = 0x0870,
     DEBE_CKEY_MAX    = 0x0880,
     DEBE_CKEY_MIN    = 0x0884,

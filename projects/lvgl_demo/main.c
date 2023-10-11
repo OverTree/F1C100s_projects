@@ -9,9 +9,22 @@
 #include "arm32.h"
 #include "lvgl.h"
 #include "lv_demo_widgets.h"
+#include "f1c100s_gpio.h"
 
 void timer_init(void);
 void timer_irq_handler(void);
+
+volatile uint8_t tick_flag = 0;
+
+void delay(uint32_t t) {
+    while(1) {
+        if(t == 0) return;
+        if(tick_flag == 1) {
+            tick_flag = 0;
+            t--;
+        }
+    }
+}
 
 void lvgl_print_cb(
     lv_log_level_t level,
@@ -26,6 +39,13 @@ int main(void) {
 
     printf("Hello from firmware!\r\n");
     timer_init();
+
+    gpio_pin_init(GPIOE, 5, GPIO_MODE_OUTPUT, GPIO_PULL_NONE, GPIO_DRV_3);
+    gpio_pin_set(GPIOE, 5);
+    delay(120);
+    gpio_pin_clear(GPIOE, 5);
+    delay(50);
+    gpio_pin_set(GPIOE, 5);
 
     lv_init();
     lv_log_register_print_cb(lvgl_print_cb);
@@ -56,6 +76,7 @@ void timer_init(void) {
 void timer_irq_handler(void) {
     lv_tick_inc(1);
     tim_clear_irq(TIM0);
+    tick_flag = 1;
 }
 
 void lvgl_print_cb(
